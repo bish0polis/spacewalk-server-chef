@@ -9,8 +9,8 @@ template '/etc/spacecmd.conf' do
   group 'root'
   mode '0644'
   variables({
-     :user => node['spacewalk']['server']['user'],
-     :password => node['spacewalk']['server']['password']
+     :user => node['spacewalk']['sync']['user'],
+     :password => node['spacewalk']['sync']['password']
   })
 end
 
@@ -18,6 +18,13 @@ end
 #  command 'echo -e "centosbase\ncentosbase\nCentos Base Channel" | spacecmd configchannel_create'
 #  not_if 'spacecmd configchannel_details centosbase'
 #end
+
+ execute 'create_software_channel' do
+    #  command "spacecmd -u admin -- softwarechannel_create -n \"CentOS 6 EPEL (x86_64)\" -l centos6-x86_64-epel"
+      command "echo -e \"S- CentOS 6 EPEL (x86_64)\ncentos6-x86_64-epel\n\nx86_64\nsha256\" | spacecmd softwarechannel_create"
+end
+
+
 
 node['spacewalk']['server']['config_channels'].each do |channelname, channeldetails|
   #  puts "TEST -- #{channeldetails} --"

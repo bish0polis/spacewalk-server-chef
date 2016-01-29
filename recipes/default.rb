@@ -51,6 +51,7 @@ end
 %w(spacewalk-setup-postgresql spacewalk-postgresql).each do |p|
   package p do
     action :install
+    retries 3
   end
 end
 
@@ -65,6 +66,7 @@ execute 'spacewalk-setup' do
   action :run
   creates '/var/log/rhn/rhn_installation.log'
   only_if { node['spacewalk_installed'].nil? }
+#  notifies :restart, 'service[tomcat]', :delayed
 end
 
 ohai_hint 'spacewalk_installed' do
